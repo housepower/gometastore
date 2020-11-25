@@ -29,10 +29,10 @@ const (
 
 	jsonEncoding = "application/json; charset=UTF-8"
 
-	paramHost     = "host"
-	paramDbName   = "dbName"
-	paramTblName  = "tableName"
-	paramPartName = "partName"
+	paramMetadataUri = "metadataUri"
+	paramDbName      = "dbName"
+	paramTblName     = "tableName"
+	paramPartName    = "partName"
 )
 
 var (
@@ -60,29 +60,30 @@ func main() {
 	})
 
 	router.HandleFunc("/", showHelp)
-	router.HandleFunc("/{host}/databases", databaseList)
-	router.HandleFunc("/{host}", databaseList)
-	router.HandleFunc("/{host}/databases/{dbName}", databaseShow).Methods("GET")
-	router.HandleFunc("/{host}/{dbName}", databaseShow).Methods("GET")
-	router.HandleFunc("/{host}/databases/{dbName}", databaseCreate).Methods("POST")
-	router.HandleFunc("/{host}/databases/{dbName}", databaseDrop).Methods("DELETE")
-	router.HandleFunc("/{host}/{dbName}", databaseDrop).Methods("DELETE")
-	router.HandleFunc("/{host}/databases/{dbName}/", tablesList).Methods("GET")
-	router.HandleFunc("/{host}/{dbName}/", tablesList).Methods("GET")
-	router.HandleFunc("/{host}/databases/{dbName}/{tableName}", tablesShow).Methods("GET")
-	router.HandleFunc("/{host}/{dbName}/{tableName}", tablesShow).Methods("GET")
-	router.HandleFunc("/{host}/{dbName}/{tableName}", tableCreate).Methods("POST")
-	router.HandleFunc("/{host}/{dbName}/{tableName}", tableDrop).Methods("DELETE")
-	router.HandleFunc("/{host}/databases/{dbName}/{tableName}", tableCreate).Methods("POST")
-	router.HandleFunc("/{host}/databases/{dbName}/{tableName}", tableDrop).Methods("DELETE")
-	router.HandleFunc("/{host}/{dbName}/{tableName}/", partitionsList).Methods("GET")
-	router.HandleFunc("/{host}/databases/{dbName}/{tableName}/", partitionsList).Methods("GET")
-	router.HandleFunc("/{host}/{dbName}/{tableName}/{partName}", partitionShow).Methods("GET")
-	router.HandleFunc("/{host}/databases/{dbName}/{tableName}/{partName}", partitionShow).Methods("GET")
-	router.HandleFunc("/{host}/{dbName}/{tableName}/", partitionAdd).Methods("POST")
-	router.HandleFunc("/{host}/databases/{dbName}/{tableName}/", partitionAdd).Methods("POST")
-	router.HandleFunc("/{host}/{dbName}/{tableName}/{partName}", partitionDrop).Methods("DELETE")
-	router.HandleFunc("/{host}/databases/{dbName}/{tableName}/{partName}", partitionDrop).Methods("DELETE")
+	router.HandleFunc("/{metadataUri}/databases", databaseList)
+	router.HandleFunc("/{metadataUri}", databaseList)
+	router.HandleFunc("/{metadataUri}/databases/{dbName}", databaseShow).Methods("GET")
+	router.HandleFunc("/{metadataUri}/{dbName}", databaseShow).Methods("GET")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}", databaseCreate).Methods("POST")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}", databaseDrop).Methods("DELETE")
+	router.HandleFunc("/{metadataUri}/{dbName}", databaseDrop).Methods("DELETE")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/", tablesList).Methods("GET")
+	router.HandleFunc("/{metadataUri}/{dbName}/", tablesList).Methods("GET")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/{tableName}", tablesShow).Methods("GET")
+	router.HandleFunc("/{metadataUri}/{dbName}/{tableName}", tablesShow).Methods("GET")
+	router.HandleFunc("/{metadataUri}/{dbName}/{tableName}", tableCreate).Methods("POST")
+	router.HandleFunc("/{metadataUri}/{dbName}/{tableName}", tableDrop).Methods("DELETE")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/{tableName}", tableCreate).Methods("POST")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/{tableName}", tableDrop).Methods("DELETE")
+	router.HandleFunc("/{metadataUri}/{dbName}/{tableName}/", partitionsList).Methods("GET")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/{tableName}/", partitionsList).Methods("GET")
+	router.HandleFunc("/{metadataUri}/{dbName}/{tableName}/{partName}", partitionShow).Methods("GET")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/{tableName}/{partName}", partitionShow).Methods("GET")
+	router.HandleFunc("/{metadataUri}/{dbName}/{tableName}/", partitionAdd).Methods("POST")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/{tableName}/", partitionAdd).Methods("POST")
+	router.HandleFunc("/{metadataUri}/{dbName}/{tableName}/{partName}", partitionDrop).Methods("DELETE")
+	router.HandleFunc("/{metadataUri}/databases/{dbName}/{tableName}/{partName}", partitionDrop).Methods("DELETE")
 
+	log.Printf("Start to listen at :%d\n", webPort)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", webPort), router))
 }

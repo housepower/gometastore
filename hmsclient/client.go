@@ -15,14 +15,14 @@
 package hmsclient
 
 import (
-    "context"
-    "fmt"
-    "net"
-    "strconv"
-    "strings"
+	"context"
+	"fmt"
+	"net"
+	"strconv"
+	"strings"
 
-    "git.apache.org/thrift.git/lib/go/thrift"
-    "github.com/akolb1/gometastore/hmsclient/thrift/gen-go/hive_metastore"
+	"git.apache.org/thrift.git/lib/go/thrift"
+	"github.com/akolb1/gometastore/hmsclient/thrift/gen-go/hive_metastore"
 )
 
 type TableType int
@@ -196,7 +196,7 @@ func (c *MetastoreClient) GetTables(dbName string, pattern string) ([]string, er
 
 // GetTableObjects returns list of Table objects for the given database and list of table names.
 func (c *MetastoreClient) GetTableObjects(dbName string, tableNames []string) ([]*hive_metastore.Table, error) {
-    return c.client.GetTableObjectsByName(c.context, dbName, tableNames);
+	return c.client.GetTableObjectsByName(c.context, dbName, tableNames)
 }
 
 // GetTable returns detailed information about the specified table

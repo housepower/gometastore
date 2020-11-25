@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
 	"strconv"
 	"strings"
@@ -29,16 +30,33 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 	"github.com/oklog/ulid"
+	"github.com/yudai/pp"
 )
 
 // getClient connects to the host specified in the requests and returns connected HMS client.
 func getClient(w http.ResponseWriter, r *http.Request) (*hmsclient.MetastoreClient, error) {
-	vars := mux.Vars(r)
-	server := vars[paramHost]
+	var (
+		vars    = mux.Vars(r)
+		err     error
+		portStr = strconv.Itoa(hmsPortDefault)
+		server  = vars[paramMetadataUri]
+	)
+
 	if server == "" {
 		server = "localhost"
+	} else if strings.Contains(server, ":") {
+		server, portStr, err = net.SplitHostPort(server)
+		if err != nil {
+			return nil, err
+		}
 	}
-	client, err := hmsclient.Open(server, hmsPort)
+
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		return nil, err
+	}
+
+	client, err := hmsclient.Open(server, port)
 	if err != nil {
 		w.Header().Set("X-HMS-Error", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
@@ -65,7 +83,7 @@ func showHelp(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintf(w, "<h1>%s</h1><div>"+
 		"See <a href=%s>Documentation</a></div>",
 		"HmsWEB - HTTP interface to Hive Metastore",
-		"https://github.com/akolb1/gometastore/tree/master/hmsweb")
+		"https://github.com/housepower/gometastore/tree/master/hmsweb")
 }
 
 // databaseList shows list of databases.
@@ -310,6 +328,8 @@ func partitionsList(w http.ResponseWriter, r *http.Request) {
 	}
 	// Either show full URI for each database or show compact presentation -
 	// just list of databases, based on "Compact" query parameter
+
+	pp.Println(partitions)
 	compact, _ := strconv.ParseBool(r.URL.Query().Get("Compact"))
 	if !compact {
 		pList := make([]string, len(partitions))
